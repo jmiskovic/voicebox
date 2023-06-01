@@ -4,8 +4,8 @@ import * as NoiseGenerator from "./NoiseGenerator";
 
 export class Glottis {
 
-   public  alwaysVoice:                boolean = true;
-   public  autoWobble:                 boolean = true;
+   public  alwaysVoice:                boolean = false;
+   public  autoWobble:                 boolean = false;
    public  isTouched:                  boolean = false;
    public  targetTenseness             = 0.6;
    public  targetFrequency             = 140;

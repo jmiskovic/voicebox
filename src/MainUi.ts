@@ -46,8 +46,8 @@ export class MainUi extends EventTarget {
       this.touchesWithMouse = [];
       this.screen = Screen.about;
       this.aboutButton       = new Button(460, 392, 140, 30, "about...", true);
-      this.alwaysVoiceButton = new Button(460, 428, 140, 30, "always voice", true);
-      this.autoWobbleButton  = new Button(460, 464, 140, 30, "pitch wobble", true);
+      this.alwaysVoiceButton = new Button(460, 428, 140, 30, "always voice", false);
+      this.autoWobbleButton  = new Button(460, 464, 140, 30, "pitch wobble", false);
       canvas.addEventListener("touchstart",  (event) => this.touchStartEventHandler(event));
       canvas.addEventListener("touchmove",   (event) => this.touchMoveEventHandler(event));
       canvas.addEventListener("touchend",    (event) => this.touchEndEventHandler(event));
