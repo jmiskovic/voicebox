@@ -1,15 +1,18 @@
-# pink-trombone-mod
+# voicebox
 
-This is a revised version of the Pink Trombone speech
+web app: [jmiskovic.github.io/voicebox](https://jmiskovic.github.io/voicebox)
+
+The project is a revised version of the Pink Trombone speech
 synthesizer originally developed by Neil Thapen in 2017.
 The original source code was modularized and converted to TypeScript.
+
+Forked from [pink-trombone-mod](https://github.com/chdh/pink-trombone-mod), the voicebox tries to
+make usage more friendly.
 
 Pink Trombone uses two-dimensional
 [digital waveguide synthesis](https://en.wikipedia.org/wiki/Digital_waveguide_synthesis)
 to synthesize human speech sounds.
 
-**Online demo**: [chdh.github.io/pink-trombone-mod](https://chdh.github.io/pink-trombone-mod)<br>
-**NPM package**: [pink-trombone-mod](https://www.npmjs.com/package/pink-trombone-mod)<br>
 
 ## Bibliographic references cited by Neil Thapen
 

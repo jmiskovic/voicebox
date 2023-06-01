@@ -113,16 +113,18 @@ export class MainUi extends EventTarget {
       const ctx = this.ctx;
       ctx.save();
       ctx.globalAlpha = 1;
-      ctx.fillStyle = color4;
-      ctx.strokeStyle = color4;
+      ctx.fillStyle = color1;
+      ctx.strokeStyle = color1;
       ctx.font = "50px Arial";
       ctx.lineWidth = 3;
       ctx.textAlign = "center";
-      const titleText = "P i n k   T r o m b o n e";
+      const titleText = "voicebox";
       ctx.strokeText(titleText, 300, 230);
       ctx.fillText(titleText, 300, 230);
       ctx.font = "28px Arial";
-      ctx.fillText("bare-handed  speech synthesis", 300, 330);
+      ctx.fillStyle = color4;
+      ctx.strokeStyle = color4;
+      ctx.fillText("vocal tract sound synthesis", 300, 330);
       ctx.font = "20px Arial";
       ctx.restore();
    }
@@ -168,7 +170,7 @@ export class MainUi extends EventTarget {
 
       this.instructionsLine = 18.8;
       ctx.textAlign = "left";
-      this.write("This is the demo program for the pink-trombone-mod package.");
+      this.write("voicebox uses the pink-trombone-mod package.");
       ctx.save();
       ctx.fillStyle = color1;
       ctx.globalAlpha = 0.6;
