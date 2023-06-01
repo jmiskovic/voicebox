@@ -1,7 +1,7 @@
 {
    "private": true,
    "scripts": {
-      "build": "tsc && rollup -c"
+      "build": "tsc && npx rollup -c rollup.config.mjs"
    },
    "devDependencies": {
       "rollup-plugin-alias": "^1.5.1"

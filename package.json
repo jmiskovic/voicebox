@@ -23,13 +23,14 @@
       }
    ],
    "scripts": {
-      "clean": "node build.js clean",
-      "build": "node build.js build",
-      "prepack": "node build.js verifyCurrentDirIsDist",
+      "clean": "node build.cjs clean",
+      "build": "node build.cjs build",
+      "prepack": "node build.cjs verifyCurrentDirIsDist",
       "doPack": "cd dist && npm pack",
       "doPublish": "cd dist && npm publish"
    },
    "devDependencies": {
-      "rimraf": "^2.6.3"
+      "rimraf": "^2.6.3",
+      "tslint": "^6.1.3"
    }
 }

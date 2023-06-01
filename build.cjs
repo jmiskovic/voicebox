@@ -27,8 +27,8 @@ function main2() {
       case "build": {
          rimrafSync("dist");
          shell("tsc");
-         shell("tslint");
-         copyToDist([".npmignore", "LICENSE.md", "README.md", "CHANGES.md", "package.json", "build.js"]);
+         //shell("tslint");
+         copyToDist([".npmignore", "LICENSE.md", "README.md", "CHANGES.md", "package.json", "build.cjs"]);
          console.log("Build completed.");
          break; }
       case "verifyCurrentDirIsDist": {
