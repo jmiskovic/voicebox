@@ -1,3 +1,9 @@
+const color1 = '#46425e';
+const color2 = '#5b768d';
+const color3 = '#d17c7c';
+const color4 = '#f6c6a8';
+
+
 import {Tract, TurbulencePoint} from "./Tract";
 import {TractShaper} from "./TractShaper";
 import * as GuiUtils from "./GuiUtils";
@@ -8,8 +14,8 @@ const originX                        = 340;                // x coordinate of th
 const originY                        = 449;                // y coordinate of the center of the circle
 const radius                         = 298;                // radius of the outer circle
 const scale                          = 60;                 // radial scaling factor
-const fillColour                     = 'pink';
-const lineColour                     = '#C070C6';
+const fillColour                     = color1;
+const lineColour                     = color3;
 const angleScale                     = 0.64;
 const angleOffset                    = -0.24;
 const noseOffset                     = 0.8;
@@ -166,7 +172,7 @@ export class TractUi  {
       ctx.fill();
 
       // white text
-      ctx.fillStyle = "white";
+      ctx.fillStyle = color4;
       ctx.font = "20px Arial";
       ctx.textAlign = "center";
       ctx.globalAlpha = 1;
@@ -223,7 +229,7 @@ export class TractUi  {
       this.lineTo(tract.noseStart + velumAngle, -noseOffset);
       ctx.stroke();
 
-      ctx.fillStyle = "orchid";
+      ctx.fillStyle = color3;
       ctx.font = "20px Arial";
       ctx.textAlign = "center";
       ctx.globalAlpha = 0.7;
@@ -238,7 +244,7 @@ export class TractUi  {
       ctx.save();
 
       //text
-      ctx.fillStyle = "orchid";
+      ctx.fillStyle = color3;
       ctx.font = "20px Arial";
       ctx.textAlign = "center";
       ctx.globalAlpha = 0.7;
@@ -255,7 +261,7 @@ export class TractUi  {
       this.drawText(tract.n * 1.03, -0.28, "stops");
       this.drawText(tract.n * 1.03, 0.51, "fricatives");
       // this.drawTextStraight(1.5, 0.8, "glottis")
-      ctx.strokeStyle = "orchid";
+      ctx.strokeStyle = color3;
       ctx.lineWidth = 2;
       ctx.beginPath();
       this.moveTo(tract.n * 1.03, 0);
@@ -270,7 +276,7 @@ export class TractUi  {
    private drawAmplitudes() {
       const ctx = this.ctx;
       const tract = this.tract;
-      ctx.strokeStyle = "orchid";
+      ctx.strokeStyle = color3;
       ctx.lineCap = "butt";
       ctx.globalAlpha = 0.3;
       for (let i = 2; i < tract.n - 1; i++) {
@@ -296,8 +302,8 @@ export class TractUi  {
       const tractShaper = this.tractShaper;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
-      ctx.strokeStyle = GuiUtils.palePink;
-      ctx.fillStyle = GuiUtils.palePink;
+      ctx.strokeStyle = color2;
+      ctx.fillStyle = color2;
       ctx.globalAlpha = 1;
       ctx.beginPath();
       ctx.lineWidth = 45;
@@ -317,7 +323,7 @@ export class TractUi  {
          const c = outerTongueControlRadius;
          const b = 0.5 * (a + c);
          const r = 3;
-         ctx.fillStyle = "orchid";
+         ctx.fillStyle = color3;
          ctx.globalAlpha = 0.3;
          this.drawCircle(this.tongueIndexCentre, a, r);
          this.drawCircle(this.tongueIndexCentre - 4.25, a, r);
@@ -339,7 +345,7 @@ export class TractUi  {
          const x = originX - r * Math.cos(angle);
          const y = originY - r * Math.sin(angle);
          ctx.lineWidth = 4;
-         ctx.strokeStyle = "orchid";
+         ctx.strokeStyle = color3;
          ctx.globalAlpha = 0.7;
          ctx.beginPath();
          ctx.arc(x, y, 18, 0, 2 * Math.PI);
@@ -349,7 +355,7 @@ export class TractUi  {
          ctx.globalAlpha = 1;
       }
 
-      ctx.fillStyle = "orchid";
+      ctx.fillStyle = color3;
    }
 
    public handleTouches(touches: AppTouch[], time: number) {

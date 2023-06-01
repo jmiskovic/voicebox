@@ -1,3 +1,8 @@
+const color1 = '#46425e';
+const color2 = '#5b768d';
+const color3 = '#d17c7c';
+const color4 = '#f6c6a8';
+
 import {Glottis} from "./Glottis";
 import * as GuiUtils from "./GuiUtils";
 import {AppTouch} from "./GuiUtils";
@@ -26,8 +31,10 @@ export class GlottisUi {
 
    public drawBackground(ctx: CanvasRenderingContext2D) {
       ctx.save();
-      ctx.strokeStyle = GuiUtils.palePink;
-      ctx.fillStyle = GuiUtils.palePink;
+      ctx.fillStyle = color4;
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+      ctx.strokeStyle = color2;
+      ctx.fillStyle = color2;
       ctx.globalAlpha = 1;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
@@ -36,8 +43,8 @@ export class GlottisUi {
       ctx.globalAlpha = 0.7;
       this.drawBar(ctx, 0.52, 0.72, 8);
 
-      ctx.strokeStyle = "orchid";
-      ctx.fillStyle = "orchid";
+      ctx.strokeStyle = color3;
+      ctx.fillStyle = color3;
       for (let i = 0; i < semitones; i++) {
          const keyWidth = keyboardWidth / semitones;
          const x = keyboardLeft + (i + 1 / 2) * keyWidth;
@@ -63,15 +70,15 @@ export class GlottisUi {
          ctx.stroke();
       }
 
-      ctx.fillStyle = "orchid";
+      ctx.fillStyle = color3;
       ctx.font = "17px Arial";
       ctx.textAlign = "center";
       ctx.globalAlpha = 0.7;
       ctx.fillText("voicebox control", 300, 490);
       ctx.fillText("pitch", 300, 592);
       ctx.globalAlpha = 0.3;
-      ctx.strokeStyle = "orchid";
-      ctx.fillStyle = "orchid";
+      ctx.strokeStyle = color3;
+      ctx.fillStyle = color3;
       ctx.save();
       ctx.translate(410, 587);
       this.drawArrow(ctx, 80, 2, 10);
@@ -119,8 +126,8 @@ export class GlottisUi {
       const w = 9;
       const h = 15;
       ctx.lineWidth = 4;
-      ctx.strokeStyle = "orchid";
-      ctx.fillStyle = "orchid";
+      ctx.strokeStyle = color3;
+      ctx.fillStyle = color3;
       ctx.globalAlpha = 0.7;
       ctx.beginPath();
       ctx.moveTo(x - w, y - h);

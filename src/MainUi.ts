@@ -7,6 +7,12 @@ import {AppTouch, Button} from "./GuiUtils";
 
 export const enum Screen {main, instructions, about}
 
+const color1 = '#46425e';
+const color2 = '#5b768d';
+const color3 = '#d17c7c';
+const color4 = '#f6c6a8';
+
+
 const projectUrl = "github.com/chdh/pink-trombone-mod";
 
 // Main user interface of the Pink Trombone voice synthesizer.
@@ -96,7 +102,7 @@ export class MainUi extends EventTarget {
       const ctx = this.ctx;
       ctx.save();
       ctx.globalAlpha = 0.8;
-      ctx.fillStyle = "white";
+      ctx.fillStyle = color2;
       ctx.rect(0, 0, ctx.canvas.width, ctx.canvas.height);
       ctx.fill();
       ctx.restore();
@@ -107,8 +113,8 @@ export class MainUi extends EventTarget {
       const ctx = this.ctx;
       ctx.save();
       ctx.globalAlpha = 1;
-      ctx.fillStyle = "#C070C6";
-      ctx.strokeStyle = "#C070C6";
+      ctx.fillStyle = color4;
+      ctx.strokeStyle = color4;
       ctx.font = "50px Arial";
       ctx.lineWidth = 3;
       ctx.textAlign = "center";
@@ -125,13 +131,13 @@ export class MainUi extends EventTarget {
       const ctx = this.ctx;
       ctx.save();
       ctx.globalAlpha = 0.85;
-      ctx.fillStyle = "white";
+      ctx.fillStyle = color1;
       ctx.rect(0, 0, ctx.canvas.width, ctx.canvas.height);
       ctx.fill();
 
       ctx.globalAlpha = 1;
-      ctx.fillStyle = "#C070C6";
-      ctx.strokeStyle = "#C070C6";
+      ctx.fillStyle = color4;
+      ctx.strokeStyle = color4;
       ctx.font = "24px Arial";
       ctx.lineWidth = 2;
       ctx.textAlign = "center";
@@ -164,7 +170,7 @@ export class MainUi extends EventTarget {
       ctx.textAlign = "left";
       this.write("This is the demo program for the pink-trombone-mod package.");
       ctx.save();
-      ctx.fillStyle = "blue";
+      ctx.fillStyle = color1;
       ctx.globalAlpha = 0.6;
       this.write(projectUrl);
       ctx.restore();

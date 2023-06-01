@@ -1,4 +1,7 @@
-export const palePink = "#FFEEF5";
+const color1 = '#46425e';
+const color2 = '#5b768d';
+const color3 = '#d17c7c';
+const color4 = '#f6c6a8';
 
 export interface AppTouch {                                // info associated with a touch or mouse click
    alive:                    boolean;                      // initially true, set to false when touch or mouse button is released
@@ -31,8 +34,8 @@ export class Button {
    public draw(ctx: CanvasRenderingContext2D) {
       const radius = 10;
       ctx.save();
-      ctx.strokeStyle = palePink;
-      ctx.fillStyle = palePink;
+      ctx.strokeStyle = color2;
+      ctx.fillStyle = color2;
       ctx.globalAlpha = 1;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
@@ -50,10 +53,10 @@ export class Button {
       ctx.font = "16px Arial";
       ctx.textAlign = "center";
       if (this.switchedOn) {
-         ctx.fillStyle = "orchid";
+         ctx.fillStyle = color4;
          ctx.globalAlpha = 0.6;
       } else {
-         ctx.fillStyle = "white";
+         ctx.fillStyle = color1;
          ctx.globalAlpha = 1;
       }
       this.drawText(ctx);
