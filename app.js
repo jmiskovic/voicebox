@@ -110,100 +110,70 @@
         return () => filter(whiteNoise());
     }
 
-    const color2$3 = '#5b768d';
-    const color3$1 = '#d17c7c';
+    const color1$3 = '#46425e';
+    const color3$2 = '#d17c7c';
     const color4$3 = '#f6c6a8';
-    const baseNote = 87.3071;
-    const marks = [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0];
+    const baseFreq = 82.407;
+    const baseNote = 28;
     const keyboardTop = 500;
     const keyboardLeft = 0;
-    const keyboardWidth = 600;
+    const keyboardWidth = 1000;
     const keyboardHeight = 100;
-    const semitones = 20;
+    const semitones = 42;
+    function isBlackKey(note) {
+        return [1, 3, 6, 8, 10].includes(note % 12);
+    }
     class GlottisUi {
         constructor(glottis) {
             this.pitchControlX = 240;
             this.pitchControlY = 530;
             this.glottis = glottis;
         }
+        drawKey(ctx, isBlack, x, y, w, h) {
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = isBlack ? color1$3 : 'white';
+            ctx.fillRect(x, y, w, h);
+            ctx.lineWidth = 3;
+            ctx.globalAlpha = 0.3;
+            ctx.strokeStyle = color3$2;
+            ctx.strokeRect(x - 0.3, y - 0.6, w, h);
+        }
         drawBackground(ctx) {
             ctx.save();
             ctx.fillStyle = color4$3;
             ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-            ctx.strokeStyle = color2$3;
-            ctx.fillStyle = color2$3;
             ctx.globalAlpha = 1;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            this.drawBar(ctx, 0, 0.4, 8);
-            ctx.globalAlpha = 0.7;
-            this.drawBar(ctx, 0.52, 0.72, 8);
-            ctx.strokeStyle = color3$1;
-            ctx.fillStyle = color3$1;
+            const keyHeight = keyboardHeight * 0.9;
+            const keyWidth = keyboardWidth / semitones;
             for (let i = 0; i < semitones; i++) {
-                const keyWidth = keyboardWidth / semitones;
-                const x = keyboardLeft + (i + 1 / 2) * keyWidth;
-                const y = keyboardTop;
-                if (marks[(i + 3) % 12] == 1) {
-                    ctx.lineWidth = 4;
-                    ctx.globalAlpha = 0.4;
+                const isBlack = isBlackKey(baseNote + i);
+                if (isBlack)
+                    continue;
+                let x = keyboardLeft + i * keyWidth;
+                let y = keyboardTop;
+                let h = keyHeight;
+                let w = keyWidth;
+                if (isBlackKey(baseNote + i - 1)) {
+                    x += -keyWidth * 0.5;
+                    w += keyWidth * 0.5;
                 }
-                else {
-                    ctx.lineWidth = 3;
-                    ctx.globalAlpha = 0.2;
+                if (isBlackKey(baseNote + i + 1)) {
+                    w += keyWidth * 0.5;
                 }
-                ctx.beginPath();
-                ctx.moveTo(x, y + 9);
-                ctx.lineTo(x, y + keyboardHeight * 0.4 - 9);
-                ctx.stroke();
-                ctx.lineWidth = 3;
-                ctx.globalAlpha = 0.15;
-                ctx.beginPath();
-                ctx.moveTo(x, y + keyboardHeight * 0.52 + 6);
-                ctx.lineTo(x, y + keyboardHeight * 0.72 - 6);
-                ctx.stroke();
+                this.drawKey(ctx, isBlack, x, y, w, h);
             }
-            ctx.fillStyle = color3$1;
-            ctx.font = "17px Arial";
-            ctx.textAlign = "center";
-            ctx.globalAlpha = 0.7;
-            ctx.fillText("voicebox control", 300, 490);
-            ctx.fillText("pitch", 300, 592);
-            ctx.globalAlpha = 0.3;
-            ctx.strokeStyle = color3$1;
-            ctx.fillStyle = color3$1;
-            ctx.save();
-            ctx.translate(410, 587);
-            this.drawArrow(ctx, 80, 2, 10);
-            ctx.translate(-220, 0);
-            ctx.rotate(Math.PI);
-            this.drawArrow(ctx, 80, 2, 10);
+            for (let i = 0; i < semitones; i++) {
+                const isBlack = isBlackKey(baseNote + i);
+                if (!isBlack)
+                    continue;
+                let x = keyboardLeft + i * keyWidth;
+                let y = keyboardTop;
+                let h = keyHeight * 0.55;
+                let w = keyWidth;
+                this.drawKey(ctx, isBlack, x, y, w, h);
+            }
             ctx.restore();
             ctx.restore();
-        }
-        drawBar(ctx, topFactor, bottomFactor, radius) {
-            ctx.lineWidth = radius * 2;
-            ctx.beginPath();
-            ctx.moveTo(keyboardLeft + radius, keyboardTop + topFactor * keyboardHeight + radius);
-            ctx.lineTo(keyboardLeft + keyboardWidth - radius, keyboardTop + topFactor * keyboardHeight + radius);
-            ctx.lineTo(keyboardLeft + keyboardWidth - radius, keyboardTop + bottomFactor * keyboardHeight - radius);
-            ctx.lineTo(keyboardLeft + radius, keyboardTop + bottomFactor * keyboardHeight - radius);
-            ctx.closePath();
-            ctx.stroke();
-            ctx.fill();
-        }
-        drawArrow(ctx, l, ahw, ahl) {
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(-l, 0);
-            ctx.lineTo(0, 0);
-            ctx.lineTo(0, -ahw);
-            ctx.lineTo(ahl, 0);
-            ctx.lineTo(0, ahw);
-            ctx.lineTo(0, 0);
-            ctx.closePath();
-            ctx.stroke();
-            ctx.fill();
         }
         draw(ctx) {
             this.drawPitchControl(ctx, this.pitchControlX, this.pitchControlY);
@@ -215,8 +185,8 @@
             const w = 9;
             const h = 15;
             ctx.lineWidth = 4;
-            ctx.strokeStyle = color3$1;
-            ctx.fillStyle = color3$1;
+            ctx.strokeStyle = color3$2;
+            ctx.fillStyle = color3$2;
             ctx.globalAlpha = 0.7;
             ctx.beginPath();
             ctx.moveTo(x - w, y - h);
@@ -248,10 +218,11 @@
             if (this.touch) {
                 const localX = this.touch.x - keyboardLeft;
                 const localY = clamp(this.touch.y - keyboardTop - 10, 0, keyboardHeight - 26);
-                const semitone = semitones * localX / keyboardWidth + 0.5;
-                glottis.targetFrequency = baseNote * Math.pow(2, semitone / 12);
+                let semitone = semitones * localX / keyboardWidth + 0.5;
+                semitone = (glottis.autotune) ? Math.round(semitone) : semitone;
+                glottis.targetFrequency = baseFreq * Math.pow(2, semitone / 12);
                 const t = clamp(1 - localY / (keyboardHeight - 28), 0, 1);
-                glottis.targetTenseness = 1 - Math.cos(t * Math.PI / 2);
+                glottis.targetTenseness = 3 * t * t - 2 * t * t * t;
                 this.pitchControlX = this.touch.x;
                 this.pitchControlY = localY + keyboardTop + 10;
             }
@@ -260,15 +231,15 @@
     }
 
     const color1$2 = '#46425e';
-    const color2$2 = '#5b768d';
-    const color3 = '#d17c7c';
+    const color2$1 = '#5b768d';
+    const color3$1 = '#d17c7c';
     const color4$2 = '#f6c6a8';
     const originX = 340;
     const originY = 449;
     const radius = 298;
     const scale = 60;
     const fillColour = color1$2;
-    const lineColour = color3;
+    const lineColour = color3$1;
     const angleScale = 0.64;
     const angleOffset = -0.24;
     const noseOffset = 0.8;
@@ -440,7 +411,7 @@
             this.moveTo(tract.noseStart + velumAngle - 2, 0);
             this.lineTo(tract.noseStart + velumAngle, -noseOffset);
             ctx.stroke();
-            ctx.fillStyle = color3;
+            ctx.fillStyle = color3$1;
             ctx.font = "20px Arial";
             ctx.textAlign = "center";
             ctx.globalAlpha = 0.7;
@@ -451,7 +422,7 @@
             this.ctx = ctx;
             const tract = this.tract;
             ctx.save();
-            ctx.fillStyle = color3;
+            ctx.fillStyle = color3$1;
             ctx.font = "20px Arial";
             ctx.textAlign = "center";
             ctx.globalAlpha = 0.7;
@@ -466,7 +437,7 @@
             this.drawText(tract.n * 1.03, -1.07, "nasals");
             this.drawText(tract.n * 1.03, -0.28, "stops");
             this.drawText(tract.n * 1.03, 0.51, "fricatives");
-            ctx.strokeStyle = color3;
+            ctx.strokeStyle = color3$1;
             ctx.lineWidth = 2;
             ctx.beginPath();
             this.moveTo(tract.n * 1.03, 0);
@@ -479,7 +450,7 @@
         drawAmplitudes() {
             const ctx = this.ctx;
             const tract = this.tract;
-            ctx.strokeStyle = color3;
+            ctx.strokeStyle = color3$1;
             ctx.lineCap = "butt";
             ctx.globalAlpha = 0.3;
             for (let i = 2; i < tract.n - 1; i++) {
@@ -504,8 +475,8 @@
             const tractShaper = this.tractShaper;
             ctx.lineCap = "round";
             ctx.lineJoin = "round";
-            ctx.strokeStyle = color2$2;
-            ctx.fillStyle = color2$2;
+            ctx.strokeStyle = color2$1;
+            ctx.fillStyle = color2$1;
             ctx.globalAlpha = 1;
             ctx.beginPath();
             ctx.lineWidth = 45;
@@ -522,7 +493,7 @@
                 const c = outerTongueControlRadius;
                 const b = 0.5 * (a + c);
                 const r = 3;
-                ctx.fillStyle = color3;
+                ctx.fillStyle = color3$1;
                 ctx.globalAlpha = 0.3;
                 this.drawCircle(this.tongueIndexCentre, a, r);
                 this.drawCircle(this.tongueIndexCentre - 4.25, a, r);
@@ -541,7 +512,7 @@
                 const x = originX - r * Math.cos(angle);
                 const y = originY - r * Math.sin(angle);
                 ctx.lineWidth = 4;
-                ctx.strokeStyle = color3;
+                ctx.strokeStyle = color3$1;
                 ctx.globalAlpha = 0.7;
                 ctx.beginPath();
                 ctx.arc(x, y, 18, 0, 2 * Math.PI);
@@ -550,7 +521,7 @@
                 ctx.fill();
                 ctx.globalAlpha = 1;
             }
-            ctx.fillStyle = color3;
+            ctx.fillStyle = color3$1;
         }
         handleTouches(touches, time) {
             const tract = this.tract;
@@ -669,7 +640,8 @@
     }
 
     const color1$1 = '#46425e';
-    const color2$1 = '#5b768d';
+    const color2 = '#5b768d';
+    const color3 = '#d17c7c';
     const color4$1 = '#f6c6a8';
     class Button {
         constructor(x, y, width, height, text, switchedOn) {
@@ -683,8 +655,14 @@
         draw(ctx) {
             const radius = 10;
             ctx.save();
-            ctx.strokeStyle = color2$1;
-            ctx.fillStyle = color2$1;
+            if (this.switchedOn) {
+                ctx.strokeStyle = color3;
+                ctx.fillStyle = color3;
+            }
+            else {
+                ctx.strokeStyle = color1$1;
+                ctx.fillStyle = color1$1;
+            }
             ctx.globalAlpha = 1;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
@@ -697,14 +675,14 @@
             ctx.closePath();
             ctx.stroke();
             ctx.fill();
-            ctx.font = "16px Arial";
+            ctx.font = "bold 12px Arial";
             ctx.textAlign = "center";
             if (this.switchedOn) {
                 ctx.fillStyle = color4$1;
-                ctx.globalAlpha = 0.6;
+                ctx.globalAlpha = 0.8;
             }
             else {
-                ctx.fillStyle = color1$1;
+                ctx.fillStyle = color2;
                 ctx.globalAlpha = 1;
             }
             this.drawText(ctx);
@@ -729,13 +707,13 @@
     }
 
     const color1 = '#46425e';
-    const color2 = '#5b768d';
     const color4 = '#f6c6a8';
     const projectUrl = "github.com/chdh/pink-trombone-mod";
     class MainUi extends EventTarget {
         constructor(synthesizer, canvas) {
             super();
             this.mouseTouchCtr = 0;
+            this.initialized = false;
             this.synthesizer = synthesizer;
             this.canvas = canvas;
             this.ctx = canvas.getContext("2d");
@@ -743,10 +721,14 @@
             this.glottisUi = new GlottisUi(synthesizer.glottis);
             this.tractUi = new TractUi(synthesizer.tract, synthesizer.tractShaper);
             this.touchesWithMouse = [];
-            this.screen = 2;
-            this.aboutButton = new Button(460, 392, 140, 30, "about...", true);
-            this.alwaysVoiceButton = new Button(460, 428, 140, 30, "always voice", false);
-            this.autoWobbleButton = new Button(460, 464, 140, 30, "pitch wobble", false);
+            this.screen = 0;
+            let position = ((x = 160) => () => x += 90)();
+            this.alwaysVoiceButton = new Button(position(), 470, 80, 20, "SUSTAINED", false);
+            this.vibratoButton = new Button(position(), 470, 80, 20, "VIBRATO", true);
+            this.autotuneButton = new Button(position(), 470, 80, 20, "AUTOTUNE", true);
+            this.autoWobbleButton = new Button(position(), 470, 80, 20, "WOBBLE", false);
+            position();
+            this.aboutButton = new Button(position(), 470, 70, 20, "ABOUT", true);
             canvas.addEventListener("touchstart", (event) => this.touchStartEventHandler(event));
             canvas.addEventListener("touchmove", (event) => this.touchMoveEventHandler(event));
             canvas.addEventListener("touchend", (event) => this.touchEndEventHandler(event));
@@ -779,47 +761,16 @@
             this.glottisUi.draw(ctx);
             this.tractUi.draw(ctx);
             this.alwaysVoiceButton.draw(ctx);
+            this.vibratoButton.draw(ctx);
             this.autoWobbleButton.draw(ctx);
+            this.autotuneButton.draw(ctx);
             this.aboutButton.draw(ctx);
             switch (this.screen) {
-                case 2: {
-                    this.drawAboutScreen();
-                    break;
-                }
                 case 1: {
                     this.drawInstructionsScreen();
                     break;
                 }
             }
-        }
-        drawAboutScreen() {
-            const ctx = this.ctx;
-            ctx.save();
-            ctx.globalAlpha = 0.8;
-            ctx.fillStyle = color2;
-            ctx.rect(0, 0, ctx.canvas.width, ctx.canvas.height);
-            ctx.fill();
-            ctx.restore();
-            this.drawAboutText();
-        }
-        drawAboutText() {
-            const ctx = this.ctx;
-            ctx.save();
-            ctx.globalAlpha = 1;
-            ctx.fillStyle = color1;
-            ctx.strokeStyle = color1;
-            ctx.font = "50px Arial";
-            ctx.lineWidth = 3;
-            ctx.textAlign = "center";
-            const titleText = "voicebox";
-            ctx.strokeText(titleText, 300, 230);
-            ctx.fillText(titleText, 300, 230);
-            ctx.font = "28px Arial";
-            ctx.fillStyle = color4;
-            ctx.strokeStyle = color4;
-            ctx.fillText("vocal tract sound synthesis", 300, 330);
-            ctx.font = "20px Arial";
-            ctx.restore();
         }
         drawInstructionsScreen() {
             const ctx = this.ctx;
@@ -886,8 +837,12 @@
         buttonsHandleTouchStart(touch) {
             this.alwaysVoiceButton.handleTouchStart(touch);
             this.glottis.alwaysVoice = this.alwaysVoiceButton.switchedOn;
+            this.vibratoButton.handleTouchStart(touch);
+            this.glottis.strongVibrato = this.vibratoButton.switchedOn;
             this.autoWobbleButton.handleTouchStart(touch);
             this.glottis.autoWobble = this.autoWobbleButton.switchedOn;
+            this.autotuneButton.handleTouchStart(touch);
+            this.glottis.autotune = this.autotuneButton.switchedOn;
             this.aboutButton.handleTouchStart(touch);
         }
         touchStartEventHandler(event) {
@@ -896,10 +851,6 @@
                 case 0: {
                     this.processStartTouches(event.changedTouches);
                     this.handleTouches();
-                    break;
-                }
-                case 2: {
-                    this.switchScreen(0);
                     break;
                 }
                 case 1: {
@@ -945,6 +896,10 @@
             this.handleTouches();
         }
         touchEndEventHandler(event) {
+            if (!this.initialized) {
+                this.dispatchEvent(new CustomEvent("sound-restart-requested"));
+                this.initialized = true;
+            }
             for (const touch of event.changedTouches) {
                 const appTouch = this.getAppTouchById(touch.identifier);
                 if (appTouch) {
@@ -973,10 +928,6 @@
                     this.handleTouches();
                     break;
                 }
-                case 2: {
-                    this.switchScreen(0);
-                    break;
-                }
                 case 1: {
                     const p = mapDomToCanvasCoordinates(this.canvas, event.clientX, event.clientY);
                     this.instructionsScreenHandleTouch(p.x, p.y);
@@ -993,6 +944,10 @@
             this.handleTouches();
         }
         mouseUpEventHandler(_event) {
+            if (!this.initialized) {
+                this.dispatchEvent(new CustomEvent("sound-restart-requested"));
+                this.initialized = true;
+            }
             const appTouch = this.mouseTouch;
             if (!appTouch || !appTouch.alive) {
                 return;
@@ -1142,11 +1097,13 @@
         constructor(sampleRate) {
             this.alwaysVoice = false;
             this.autoWobble = false;
+            this.strongVibrato = true;
+            this.autotune = true;
             this.isTouched = false;
             this.targetTenseness = 0.6;
             this.targetFrequency = 140;
-            this.vibratoAmount = 0.005;
-            this.vibratoFrequency = 6;
+            this.vibratoAmount = 0.05;
+            this.vibratoFrequency = 5;
             this.sampleCount = 0;
             this.intensity = 0;
             this.loudness = 1;
@@ -1202,7 +1159,7 @@
         }
         calculateNewTenseness(time) {
             this.oldTenseness = this.newTenseness;
-            this.newTenseness = Math.max(0, this.targetTenseness + 0.1 * simplex1(time * 0.46) + 0.05 * simplex1(time * 0.36));
+            this.newTenseness = this.targetTenseness;
             if (!this.isTouched && this.alwaysVoice) {
                 this.newTenseness += (3 - this.targetTenseness) * (1 - this.intensity);
             }
@@ -1218,12 +1175,16 @@
         }
         calculateVibrato(time) {
             let vibrato = 0;
-            vibrato += this.vibratoAmount * Math.sin(2 * Math.PI * time * this.vibratoFrequency);
-            vibrato += 0.02 * simplex1(time * 4.07);
-            vibrato += 0.04 * simplex1(time * 2.15);
+            if (this.strongVibrato) {
+                vibrato += this.vibratoAmount * Math.sin(2 * Math.PI * time * this.vibratoFrequency);
+            }
+            else {
+                vibrato += 0.02 * simplex1(time * 4.07);
+                vibrato += 0.04 * simplex1(time * 2.15);
+            }
             if (this.autoWobble) {
-                vibrato += 0.2 * simplex1(time * 0.98);
-                vibrato += 0.4 * simplex1(time * 0.5);
+                vibrato += 0.1 * simplex1(time * 1.4);
+                vibrato += 0.2 * simplex1(time * 1.7);
             }
             return vibrato;
         }
@@ -1600,6 +1561,10 @@
         mainUi.draw();
         requestAnimationFrame(animationFrameHandler);
     }
+    function mainUi_restartSound() {
+        audioPlayer.stop();
+        audioPlayer.start();
+    }
     function mainUi_screenSwitched() {
         if (mainUi.screen == 0) {
             audioPlayer.start();
@@ -1615,6 +1580,7 @@
         synthesizer = new Synthesizer(sampleRate);
         audioPlayer = new AudioPlayer(synthesizer, audioContext);
         mainUi = new MainUi(synthesizer, canvas);
+        mainUi.addEventListener("sound-restart-requested", mainUi_restartSound);
         mainUi.addEventListener("screen-switched", mainUi_screenSwitched);
         mainUi.draw();
         requestAnimationFrame(animationFrameHandler);
