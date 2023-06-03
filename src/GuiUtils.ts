@@ -34,8 +34,13 @@ export class Button {
    public draw(ctx: CanvasRenderingContext2D) {
       const radius = 10;
       ctx.save();
-      ctx.strokeStyle = color2;
-      ctx.fillStyle = color2;
+      if (this.switchedOn) {
+         ctx.strokeStyle = color3;
+         ctx.fillStyle =   color3;
+      } else {
+         ctx.strokeStyle = color1;
+         ctx.fillStyle =   color1;
+      }
       ctx.globalAlpha = 1;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
@@ -50,13 +55,13 @@ export class Button {
       ctx.stroke();
       ctx.fill();
 
-      ctx.font = "16px Arial";
+      ctx.font = "bold 12px Arial";
       ctx.textAlign = "center";
       if (this.switchedOn) {
          ctx.fillStyle = color4;
-         ctx.globalAlpha = 0.6;
+         ctx.globalAlpha = 0.8;
       } else {
-         ctx.fillStyle = color1;
+         ctx.fillStyle = color2;
          ctx.globalAlpha = 1;
       }
       this.drawText(ctx);
