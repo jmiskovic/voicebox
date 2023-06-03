@@ -12,7 +12,7 @@ const baseNote               = 87.3071;                    // F
 const marks                  = [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0];
 const keyboardTop            = 500;
 const keyboardLeft           = 0;
-const keyboardWidth          = 600;
+const keyboardWidth          = 1000;
 const keyboardHeight         = 100;
 const semitones              = 20;
 
