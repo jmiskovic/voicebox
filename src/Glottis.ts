@@ -6,11 +6,13 @@ export class Glottis {
 
    public  alwaysVoice:                boolean = false;
    public  autoWobble:                 boolean = false;
+   public  strongVibrato:              boolean = true;
+   public  autotune:                   boolean = true;
    public  isTouched:                  boolean = false;
    public  targetTenseness             = 0.6;
    public  targetFrequency             = 140;
-   public  vibratoAmount               = 0.005;                      // not modified in this package
-   public  vibratoFrequency            = 6;                          // not modified in this package
+   public  vibratoAmount               = 0.05;
+   public  vibratoFrequency            = 5;
 
    private sampleRate:                 number;
    private sampleCount                 = 0;
@@ -84,7 +86,8 @@ export class Glottis {
 
    private calculateNewTenseness(time: number) {
       this.oldTenseness = this.newTenseness;
-      this.newTenseness = Math.max(0, this.targetTenseness + 0.1 * NoiseGenerator.simplex1(time * 0.46) + 0.05 * NoiseGenerator.simplex1(time * 0.36));
+      this.newTenseness = this.targetTenseness;
+
       if (!this.isTouched && this.alwaysVoice) {           // attack
          this.newTenseness += (3 - this.targetTenseness) * (1 - this.intensity);
       }
@@ -101,12 +104,15 @@ export class Glottis {
 
    private calculateVibrato(time: number) {
       let vibrato = 0;
-      vibrato += this.vibratoAmount * Math.sin(2 * Math.PI * time * this.vibratoFrequency);
-      vibrato += 0.02 * NoiseGenerator.simplex1(time * 4.07);
-      vibrato += 0.04 * NoiseGenerator.simplex1(time * 2.15);
+      if (this.strongVibrato) {
+         vibrato += this.vibratoAmount * Math.sin(2 * Math.PI * time * this.vibratoFrequency);
+      } else { // non-intential voice wavering
+         vibrato += 0.02 * NoiseGenerator.simplex1(time * 4.07);
+         vibrato += 0.04 * NoiseGenerator.simplex1(time * 2.15);
+      }
       if (this.autoWobble) {
-         vibrato += 0.2 * NoiseGenerator.simplex1(time * 0.98);
-         vibrato += 0.4 * NoiseGenerator.simplex1(time * 0.5);
+         vibrato += 0.1 * NoiseGenerator.simplex1(time * 1.4);
+         vibrato += 0.2 * NoiseGenerator.simplex1(time * 1.7);
       }
       return vibrato;
    }

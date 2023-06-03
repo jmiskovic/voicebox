@@ -160,10 +160,11 @@ export class GlottisUi {
       if (this.touch) {
          const localX = this.touch.x - keyboardLeft;
          const localY = Utils.clamp(this.touch.y - keyboardTop - 10, 0, keyboardHeight - 26);
-         const semitone = semitones * localX / keyboardWidth + 0.5;
-         glottis.targetFrequency = baseNote * Math.pow(2, semitone / 12);
+         let semitone = semitones * localX / keyboardWidth + 0.5;
+         semitone = (glottis.autotune) ? Math.round(semitone) : semitone;
+         glottis.targetFrequency = baseFreq * Math.pow(2, semitone / 12);
          const t = Utils.clamp(1 - localY / (keyboardHeight - 28), 0, 1);
-         glottis.targetTenseness = 1 - Math.cos(t * Math.PI / 2);
+         glottis.targetTenseness = 3 * t * t - 2 * t * t * t;
          this.pitchControlX = this.touch.x;
          this.pitchControlY = localY + keyboardTop + 10;
       }

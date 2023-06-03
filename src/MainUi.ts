@@ -32,7 +32,9 @@ export class MainUi extends EventTarget {
    private mouseTouch:               AppTouch;
    private aboutButton:              Button;
    private alwaysVoiceButton:        Button;
+   private vibratoButton:            Button;
    private autoWobbleButton:         Button;
+   private autotuneButton:           Button;
    private mouseTouchCtr             = 0;
    private initialized                = false;
 
@@ -45,10 +47,14 @@ export class MainUi extends EventTarget {
       this.glottisUi = new GlottisUi(synthesizer.glottis);
       this.tractUi = new TractUi(synthesizer.tract, synthesizer.tractShaper);
       this.touchesWithMouse = [];
-      this.aboutButton       = new Button(460, 392, 140, 30, "about...", true);
       this.screen = Screen.main;
-      this.alwaysVoiceButton = new Button(460, 428, 140, 30, "always voice", false);
-      this.autoWobbleButton  = new Button(460, 464, 140, 30, "pitch wobble", false);
+      let position = ((x = 160) => () => x += 90) ();
+      this.alwaysVoiceButton = new Button(position(), 470, 80, 20, "SUSTAINED", false);
+      this.vibratoButton     = new Button(position(), 470, 80, 20, "VIBRATO", true);
+      this.autotuneButton    = new Button(position(), 470, 80, 20, "AUTOTUNE", true);
+      this.autoWobbleButton  = new Button(position(), 470, 80, 20, "WOBBLE", false);
+      position();
+      this.aboutButton       = new Button(position(), 470, 70, 20, "ABOUT", true);
       canvas.addEventListener("touchstart",  (event) => this.touchStartEventHandler(event));
       canvas.addEventListener("touchmove",   (event) => this.touchMoveEventHandler(event));
       canvas.addEventListener("touchend",    (event) => this.touchEndEventHandler(event));
@@ -85,7 +91,9 @@ export class MainUi extends EventTarget {
       this.glottisUi.draw(ctx);
       this.tractUi.draw(ctx);
       this.alwaysVoiceButton.draw(ctx);
+      this.vibratoButton.draw(ctx);
       this.autoWobbleButton.draw(ctx);
+      this.autotuneButton.draw(ctx);
       this.aboutButton.draw(ctx);
       switch (this.screen) {
          case Screen.instructions: {
@@ -170,8 +178,12 @@ export class MainUi extends EventTarget {
    private buttonsHandleTouchStart(touch: AppTouch) {
       this.alwaysVoiceButton.handleTouchStart(touch);
       this.glottis.alwaysVoice = this.alwaysVoiceButton.switchedOn;
+      this.vibratoButton.handleTouchStart(touch);
+      this.glottis.strongVibrato = this.vibratoButton.switchedOn;
       this.autoWobbleButton.handleTouchStart(touch);
       this.glottis.autoWobble = this.autoWobbleButton.switchedOn;
+      this.autotuneButton.handleTouchStart(touch);
+      this.glottis.autotune = this.autotuneButton.switchedOn;
       this.aboutButton.handleTouchStart(touch);
    }
 
