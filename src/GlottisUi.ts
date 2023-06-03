@@ -8,13 +8,17 @@ import * as GuiUtils from "./GuiUtils";
 import {AppTouch} from "./GuiUtils";
 import * as Utils from "./Utils";
 
-const baseNote               = 87.3071;                    // F
-const marks                  = [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0];
+const baseFreq               = 82.407;  // E2
+const baseNote               = 28;
 const keyboardTop            = 500;
 const keyboardLeft           = 0;
 const keyboardWidth          = 1000;
 const keyboardHeight         = 100;
-const semitones              = 20;
+const semitones              = 42;
+
+function isBlackKey(note: number) : boolean {
+   return [1, 3, 6, 8, 10].includes(note % 12);
+}
 
 export class GlottisUi {
 
@@ -29,91 +33,57 @@ export class GlottisUi {
       this.glottis = glottis;
    }
 
+   private drawKey(ctx: CanvasRenderingContext2D, isBlack :boolean,x :number, y :number, w :number, h :number) {
+     ctx.globalAlpha = 1;
+     ctx.fillStyle = isBlack ? color1 : 'white';
+     ctx.fillRect(x, y, w, h);
+     ctx.lineWidth = 3;
+     ctx.globalAlpha = 0.3;
+     ctx.strokeStyle = color3;
+     ctx.strokeRect(x - 0.3, y - 0.6, w, h);
+  }
+
    public drawBackground(ctx: CanvasRenderingContext2D) {
       ctx.save();
       ctx.fillStyle = color4;
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-      ctx.strokeStyle = color2;
-      ctx.fillStyle = color2;
+
+      // Draw the piano keys
       ctx.globalAlpha = 1;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-
-      this.drawBar(ctx, 0, 0.4, 8);
-      ctx.globalAlpha = 0.7;
-      this.drawBar(ctx, 0.52, 0.72, 8);
-
-      ctx.strokeStyle = color3;
-      ctx.fillStyle = color3;
+      const keyHeight = keyboardHeight * 0.9;
+      const keyWidth = keyboardWidth / semitones;
       for (let i = 0; i < semitones; i++) {
-         const keyWidth = keyboardWidth / semitones;
-         const x = keyboardLeft + (i + 1 / 2) * keyWidth;
-         const y = keyboardTop;
-         if (marks[(i + 3) % 12] == 1) {
-            ctx.lineWidth = 4;
-            ctx.globalAlpha = 0.4;
-         } else {
-            ctx.lineWidth = 3;
-            ctx.globalAlpha = 0.2;
+         const isBlack = isBlackKey(baseNote + i);
+         if (isBlack) continue;
+         let x = keyboardLeft + i * keyWidth;
+         let y = keyboardTop;
+         let h = keyHeight;
+         let w = keyWidth;
+         // expand white key onto half of black key
+         if (isBlackKey(baseNote + i - 1)) {
+            x += -keyWidth * 0.5;
+            w += keyWidth * 0.5;
          }
-         ctx.beginPath();
-         ctx.moveTo(x, y + 9);
-         ctx.lineTo(x, y + keyboardHeight * 0.4 - 9);
-         ctx.stroke();
-
-         ctx.lineWidth = 3;
-         ctx.globalAlpha = 0.15;
-
-         ctx.beginPath();
-         ctx.moveTo(x, y + keyboardHeight * 0.52 + 6);
-         ctx.lineTo(x, y + keyboardHeight * 0.72 - 6);
-         ctx.stroke();
+         if (isBlackKey(baseNote + i + 1)) {
+            w += keyWidth * 0.5;
+         }
+         this.drawKey(ctx, isBlack, x, y, w, h);
+      }
+      for (let i = 0; i < semitones; i++) {
+         const isBlack = isBlackKey(baseNote + i);
+         if (!isBlack) continue;
+         let x = keyboardLeft + i * keyWidth;
+         let y = keyboardTop;
+         let h = keyHeight * 0.55;
+         let w = keyWidth;
+         this.drawKey(ctx, isBlack, x, y, w, h);
       }
 
-      ctx.fillStyle = color3;
-      ctx.font = "17px Arial";
-      ctx.textAlign = "center";
-      ctx.globalAlpha = 0.7;
-      ctx.fillText("voicebox control", 300, 490);
-      ctx.fillText("pitch", 300, 592);
-      ctx.globalAlpha = 0.3;
-      ctx.strokeStyle = color3;
-      ctx.fillStyle = color3;
-      ctx.save();
-      ctx.translate(410, 587);
-      this.drawArrow(ctx, 80, 2, 10);
-      ctx.translate(-220, 0);
-      ctx.rotate(Math.PI);
-      this.drawArrow(ctx, 80, 2, 10);
       ctx.restore();
       ctx.restore();
    }
 
-   private drawBar(ctx: CanvasRenderingContext2D, topFactor: number, bottomFactor: number, radius: number) {
-      ctx.lineWidth = radius * 2;
-      ctx.beginPath();
-      ctx.moveTo(keyboardLeft + radius, keyboardTop + topFactor * keyboardHeight + radius);
-      ctx.lineTo(keyboardLeft + keyboardWidth - radius, keyboardTop + topFactor * keyboardHeight + radius);
-      ctx.lineTo(keyboardLeft + keyboardWidth - radius, keyboardTop + bottomFactor * keyboardHeight - radius);
-      ctx.lineTo(keyboardLeft + radius, keyboardTop + bottomFactor * keyboardHeight - radius);
-      ctx.closePath();
-      ctx.stroke();
-      ctx.fill();
-   }
 
-   private drawArrow(ctx: CanvasRenderingContext2D, l: number, ahw: number, ahl: number) {
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(-l, 0);
-      ctx.lineTo(0, 0);
-      ctx.lineTo(0, -ahw);
-      ctx.lineTo(ahl, 0);
-      ctx.lineTo(0, ahw);
-      ctx.lineTo(0, 0);
-      ctx.closePath();
-      ctx.stroke();
-      ctx.fill();
-   }
 
    public draw(ctx: CanvasRenderingContext2D) {
       this.drawPitchControl(ctx, this.pitchControlX, this.pitchControlY);
