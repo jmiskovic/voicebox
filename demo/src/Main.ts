@@ -12,6 +12,11 @@ function animationFrameHandler() {
    requestAnimationFrame(animationFrameHandler);
 }
 
+function mainUi_restartSound() {
+   audioPlayer.stop();
+   audioPlayer.start();
+}
+
 function mainUi_screenSwitched() {
    if (mainUi.screen == Screen.main) {
       audioPlayer.start();
@@ -27,6 +32,7 @@ function init() {
    synthesizer = new Synthesizer(sampleRate);
    audioPlayer = new AudioPlayer(synthesizer, audioContext);
    mainUi = new MainUi(synthesizer, canvas);
+   mainUi.addEventListener("sound-restart-requested", mainUi_restartSound);
    mainUi.addEventListener("screen-switched", mainUi_screenSwitched);
    mainUi.draw();
    requestAnimationFrame(animationFrameHandler);

@@ -5,7 +5,7 @@ import {TractUi} from "./TractUi";
 import * as GuiUtils from "./GuiUtils";
 import {AppTouch, Button} from "./GuiUtils";
 
-export const enum Screen {main, instructions, about}
+export const enum Screen {main, instructions}
 
 const color1 = '#46425e';
 const color2 = '#5b768d';
@@ -34,6 +34,7 @@ export class MainUi extends EventTarget {
    private alwaysVoiceButton:        Button;
    private autoWobbleButton:         Button;
    private mouseTouchCtr             = 0;
+   private initialized                = false;
 
    constructor(synthesizer: Synthesizer, canvas: HTMLCanvasElement) {
       super();
@@ -44,8 +45,8 @@ export class MainUi extends EventTarget {
       this.glottisUi = new GlottisUi(synthesizer.glottis);
       this.tractUi = new TractUi(synthesizer.tract, synthesizer.tractShaper);
       this.touchesWithMouse = [];
-      this.screen = Screen.about;
       this.aboutButton       = new Button(460, 392, 140, 30, "about...", true);
+      this.screen = Screen.main;
       this.alwaysVoiceButton = new Button(460, 428, 140, 30, "always voice", false);
       this.autoWobbleButton  = new Button(460, 464, 140, 30, "pitch wobble", false);
       canvas.addEventListener("touchstart",  (event) => this.touchStartEventHandler(event));
@@ -87,46 +88,11 @@ export class MainUi extends EventTarget {
       this.autoWobbleButton.draw(ctx);
       this.aboutButton.draw(ctx);
       switch (this.screen) {
-         case Screen.about: {
-            this.drawAboutScreen();
-            break;
-         }
          case Screen.instructions: {
             this.drawInstructionsScreen();
             break;
          }
       }
-   }
-
-   private drawAboutScreen() {
-      const ctx = this.ctx;
-      ctx.save();
-      ctx.globalAlpha = 0.8;
-      ctx.fillStyle = color2;
-      ctx.rect(0, 0, ctx.canvas.width, ctx.canvas.height);
-      ctx.fill();
-      ctx.restore();
-      this.drawAboutText();
-   }
-
-   private drawAboutText() {
-      const ctx = this.ctx;
-      ctx.save();
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = color1;
-      ctx.strokeStyle = color1;
-      ctx.font = "50px Arial";
-      ctx.lineWidth = 3;
-      ctx.textAlign = "center";
-      const titleText = "voicebox";
-      ctx.strokeText(titleText, 300, 230);
-      ctx.fillText(titleText, 300, 230);
-      ctx.font = "28px Arial";
-      ctx.fillStyle = color4;
-      ctx.strokeStyle = color4;
-      ctx.fillText("vocal tract sound synthesis", 300, 330);
-      ctx.font = "20px Arial";
-      ctx.restore();
    }
 
    private drawInstructionsScreen() {
@@ -217,10 +183,6 @@ export class MainUi extends EventTarget {
             this.handleTouches();
             break;
          }
-         case Screen.about: {
-            this.switchScreen(Screen.main);
-            break;
-         }
          case Screen.instructions: {
             this.instructionsScreenHandleTouches(event.changedTouches);
             break;
@@ -269,6 +231,11 @@ export class MainUi extends EventTarget {
    }
 
    private touchEndEventHandler(event: TouchEvent) {
+      if (!this.initialized) {
+         // has to happen in user-initiated event
+         this.dispatchEvent(new CustomEvent("sound-restart-requested"));
+         this.initialized = true
+      }
       for (const touch of event.changedTouches) {
          const appTouch = this.getAppTouchById(touch.identifier);
          if (appTouch) {
@@ -298,10 +265,6 @@ export class MainUi extends EventTarget {
             this.handleTouches();
             break;
          }
-         case Screen.about: {
-            this.switchScreen(Screen.main);
-            break;
-         }
          case Screen.instructions: {
             const p = GuiUtils.mapDomToCanvasCoordinates(this.canvas, event.clientX, event.clientY);
             this.instructionsScreenHandleTouch(p.x, p.y);
@@ -320,6 +283,11 @@ export class MainUi extends EventTarget {
    }
 
    private mouseUpEventHandler(_event: MouseEvent) {
+      if (!this.initialized) {
+         // has to happen in user-initiated event
+         this.dispatchEvent(new CustomEvent("sound-restart-requested"));
+         this.initialized = true
+      }
       const appTouch = this.mouseTouch;
       if (!appTouch || !appTouch.alive) {
          return;
