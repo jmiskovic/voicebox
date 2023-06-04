@@ -1,5 +1,6 @@
 body {
    margin: 0;
+   background: #f6c6a8;
    padding: 0; }
 
 #wrapper1 {
@@ -10,8 +11,7 @@ body {
 
 #wrapper2 {
    box-sizing: border-box;
-   width: 100vmin;
-   height: 100vmin;
+   width: 95vw;
    padding: 5px; }
 
 #canvas {
